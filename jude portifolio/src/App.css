@@ -1,0 +1,22 @@
+/* Johnny Harris clone – global overrides */
+#root {
+  min-height: 100%;
+}
+
+/* Ensure links don’t get default purple after visit */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+input,
+textarea {
+  font-family: inherit;
+}
