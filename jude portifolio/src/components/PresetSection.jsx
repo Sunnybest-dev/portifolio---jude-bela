@@ -7,7 +7,7 @@ export default function PresetSection() {
   return (
     <div className="w-full overflow-hidden">
       {/* Teal section - presets and LUTs (johnnyharris.ch color #7f9696) */}
-      <section className="bg-[#7f9696] flex items-center py-0 lg:py-0 lg:h-100">
+      <section className="bg-[#7f9696] flex items-center h-screen lg:h-100 overflow-hidden">
         <div className="max-w-7xl mx-auto w-full px-6 lg:px-16 flex flex-col lg:flex-row items-center gap-4 lg:gap-8">
           {/* Left: Headline + link */}
           <div className="max-w-lg text-white z-10">
@@ -30,22 +30,22 @@ export default function PresetSection() {
           </div>
 
           {/* Right: Images Group */}
-          <div className="flex items-center gap-2 ml-auto">
+          <div className="relative flex items-center mx-auto lg:ml-auto h-[520px] w-[520px]">
             {/* Books Image */}
-            <div className="w-full max-w-[600px] lg:max-w-none lg:w-[520px] h-[600px] lg:h-[520px] z-10 -mb-9.5">
+            <div className="absolute left-[30%] -translate-x-1/2 lg:left-auto lg:translate-x-0 lg:right-0 -bottom-20 sm:bottom-0 lg:bottom-0 w-[80%] sm:w-[60%] lg:w-[520px] z-10">
               <img
                 src={booksImg}
                 alt="Books"
-                className="w-full h-full object-contain"
+                className="w-full object-contain"
               />
             </div>
 
             {/* Ray Image */}
-            <div className="w-full max-w-[180px] lg:max-w-none lg:w-[150px] h-[180px] lg:h-[150px] z-10">
+            <div className="absolute -right-20 bottom-24 w-[120px] sm:w-[140px] lg:w-[80px] z-10">
               <img
                 src={rayImg}
                 alt="Ray"
-                className="w-full h-full object-contain"
+                className="w-full object-contain"
               />
             </div>
           </div>
@@ -53,7 +53,7 @@ export default function PresetSection() {
       </section>
 
       {/* Orange bar - Join The Team (#e05532) */}
-      <section className="bg-[#e05532] text-black sm:py-6 sm:pt-12">
+      <section className="bg-[#e05532] text-black sm:py-6 sm:pt-12 lg:pt-10">
         <div className="max-w-4xl mx-auto px-6 text-center">
           <h2 className="text-3xl text-white lg:text-4xl font-light mb-10 font-['Vario']">
             Join The Team
