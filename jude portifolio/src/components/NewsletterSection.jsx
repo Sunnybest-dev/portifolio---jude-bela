@@ -1,8 +1,30 @@
-import React from "react";
+import React, { useState } from "react";
+import { supabase } from "../lib/supabase";
 import books2Img from "../../images/books 2.webp";
 import asset10Img from "../../images/Asset+10.webp";
 
 export default function NewsletterSection() {
+  const [email, setEmail] = useState("");
+  const [status, setStatus] = useState("");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setStatus("loading");
+
+    const { error } = await supabase
+      .from("newsletter_subscriptions")
+      .insert([{ email }]);
+
+    if (error) {
+      setStatus("error");
+      console.error(error);
+    } else {
+      setStatus("success");
+      setEmail("");
+    }
+
+    setTimeout(() => setStatus(""), 3000);
+  };
   const links = [
     { label: "Vox Borders Series", href: "https://www.youtube.com/playlist?list=PLJ8cMiYb3G5dRe4rC7m8jDaqodjZeLzCZ" },
     { label: "The New York Times", href: "https://www.nytimes.com" },

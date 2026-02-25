@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import manImg from "../../images/man.webp";
 import blackImg from "../../images/black.webp";
 import bracketImg from "../../images/bracket.webp";
@@ -18,10 +19,10 @@ export default function Hero() {
             Journalist based in <br /> Washington DC.
           </h2>
 
-          <button className="uppercase tracking-widest text-sm font-medium group">
+          <Link to="/about" className="uppercase tracking-widest text-sm font-medium group inline-block">
             MORE ABOUT JUDE
             <span className="block h-[2px] bg-red-600 w-full mt-3"></span>
-          </button>
+          </Link>
         </div>
 
         {/* RIGHT IMAGE STACK */}

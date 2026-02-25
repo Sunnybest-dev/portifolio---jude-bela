@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 export default function SubmitIdeasSection() {
   return (
@@ -54,10 +55,10 @@ export default function SubmitIdeasSection() {
         </p>
 
         {/* Button */}
-        <button className="relative uppercase tracking-widest text-sm font-semibold group">
+        <Link to="/submit-ideas" className="relative uppercase tracking-widest text-sm font-semibold group inline-block">
           SUBMIT IDEAS
           <span className="block h-[2px] bg-orange-600 w-full mt-2"></span>
-        </button>
+        </Link>
 
       </div>
     </div>

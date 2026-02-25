@@ -1,14 +1,17 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { supabase } from '../lib/supabase';
+import logo from "../../images/JudeBella.png";
 
 export default function Footer() {
-  const socialLinks = [
-    { name: "YOUTUBE", url: "https://youtube.com" },
-    { name: "TIKTOK", url: "https://tiktok.com" },
-    { name: "PATREON", url: "https://patreon.com" },
-    { name: "FACEBOOK", url: "https://facebook.com" },
-    { name: "INSTAGRAM", url: "https://instagram.com" },
-    { name: "TWITTER", url: "https://twitter.com" },
-  ];
+  const [socialLinks, setSocialLinks] = useState([]);
+
+  useEffect(() => {
+    const fetchSocial = async () => {
+      const { data } = await supabase.from('social_links').select('*').eq('is_active', true).order('order_position');
+      setSocialLinks(data || []);
+    };
+    fetchSocial();
+  }, []);
 
   const navLinks = [
     ["HOME", "ABOUT", "CONTACT"],
@@ -31,13 +34,13 @@ export default function Footer() {
             <div className="grid grid-cols-2 gap-4 lg:gap-6 text-[10px] lg:text-xs tracking-widest uppercase font-['Nord']">
               {socialLinks.map((link) => (
                 <a
-                  key={link.name}
+                  key={link.id}
                   href={link.url}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="hover:text-orange-500 transition-colors"
                 >
-                  {link.name}
+                  {link.platform}
                 </a>
               ))}
             </div>
@@ -65,9 +68,7 @@ export default function Footer() {
           {/* INFO SECTION */}
           <div className="lg:col-span-1 flex flex-col justify-between space-y-6">
             <div className="flex justify-start lg:justify-end">
-              <div className="border-2 border-orange-500 px-4 py-2">
-                <span className="text-2xl lg:text-3xl font-light tracking-widest font-['Poppins']">JB</span>
-              </div>
+              <img src={logo} alt="Jude Bela" className="h-12" />
             </div>
 
             <p className="text-left lg:text-right text-xs lg:text-sm leading-6 lg:leading-6 w-85 lg:ml-auto font-['Poppins']">

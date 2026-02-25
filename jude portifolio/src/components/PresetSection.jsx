@@ -2,6 +2,7 @@ import React from "react";
 import booksImg from "../../images/books.webp";
 import rayImg from "../../images/ray.webp";
 import arrowImg from "../../images/arrow.webp";
+import { Link } from "react-router-dom";
 
 export default function PresetSection() {
   return (
@@ -59,18 +60,16 @@ export default function PresetSection() {
             Join The Team
           </h2>
           <div className="flex flex-col sm:flex-row justify-center gap-8 sm:gap-16 lg:gap-20 text-sm tracking-[0.2em] uppercase font-medium">
-            <a
-              href="#"
+            <Link to="/research-writer"
               className="border-b-2 border-white pb-2 hover:opacity-90 transition-opacity font-['Vario']"
             >
               Researcher / Writer
-            </a>
-            <a
-              href="#"
+            </Link>
+            <Link to="/editor-animator"
               className="border-b-2 border-white pb-2 hover:opacity-90 transition-opacity font-['Vario']"
             >
               Editor / Animator
-            </a>
+            </Link>
           </div>
         </div>
       </section>
