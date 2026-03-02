@@ -1,10 +1,16 @@
 import React from "react";
+import { useCMS } from "../lib/useCMS";
 import booksImg from "../../images/books.webp";
 import rayImg from "../../images/ray.webp";
 import arrowImg from "../../images/arrow.webp";
 import { Link } from "react-router-dom";
 
 export default function PresetSection() {
+  const { content: presetContent, loading: presetLoading } = useCMS("HomePage.PresetSection");
+  const { content: teamContent, loading: teamLoading } = useCMS("HomePage.JoinTeam");
+
+  if (presetLoading || teamLoading) return <div className="h-screen bg-[#7f9696] animate-pulse"></div>;
+
   return (
     <div className="w-full overflow-hidden">
       {/* Teal section - presets and LUTs (johnnyharris.ch color #7f9696) */}
@@ -13,10 +19,10 @@ export default function PresetSection() {
           {/* Left: Headline + link */}
           <div className="max-w-lg text-white z-10">
             <h2 className="text-4xl sm:text-5xl lg:text-4xl font-light leading-tight mb-4 font-['Vario']">
-              <span className="border-b-3 border-[#e05532] pb-1">I made custom</span>
+              <span className="border-b-3 border-[#e05532] pb-1">{presetContent.title_line_1 || "I made custom"}</span>
               <br />
               <span className="border-b-3 border-[#e05532] pb-1">
-                presets and LUTs.
+                {presetContent.title_line_2 || "presets and LUTs."}
               </span>
             </h2>
           </div>
@@ -24,7 +30,7 @@ export default function PresetSection() {
           {/* Arrow Image */}
           <div className="hidden lg:block w-16 h-16">
             <img
-              src={arrowImg}
+              src={presetContent.arrow_image || arrowImg}
               alt="Arrow"
               className="w-full h-full object-contain"
             />
@@ -35,7 +41,7 @@ export default function PresetSection() {
             {/* Books Image */}
             <div className="absolute left-[30%] -translate-x-1/2 lg:left-auto lg:translate-x-0 lg:right-0 -bottom-20 sm:bottom-0 lg:bottom-0 w-[80%] sm:w-[60%] lg:w-[520px] z-10">
               <img
-                src={booksImg}
+                src={presetContent.books_image || booksImg}
                 alt="Books"
                 className="w-full object-contain"
               />
@@ -44,7 +50,7 @@ export default function PresetSection() {
             {/* Ray Image */}
             <div className="absolute -right-20 bottom-24 w-[120px] sm:w-[140px] lg:w-[80px] z-10">
               <img
-                src={rayImg}
+                src={presetContent.ray_image || rayImg}
                 alt="Ray"
                 className="w-full object-contain"
               />
@@ -57,18 +63,18 @@ export default function PresetSection() {
       <section className="bg-[#e05532] text-black sm:py-6 sm:pt-12 lg:pt-10">
         <div className="max-w-4xl mx-auto px-6 text-center">
           <h2 className="text-3xl text-white lg:text-4xl font-light mb-10 font-['Vario']">
-            Join The Team
+            {teamContent.title || "Join The Team"}
           </h2>
           <div className="flex flex-col sm:flex-row justify-center gap-8 sm:gap-16 lg:gap-20 text-sm tracking-[0.2em] uppercase font-medium">
-            <Link to="/research-writer"
+            <Link to={teamContent.link1_url || "/research-writer"}
               className="border-b-2 border-white pb-2 hover:opacity-90 transition-opacity font-['Vario']"
             >
-              Researcher / Writer
+              {teamContent.link1_text || "Researcher / Writer"}
             </Link>
-            <Link to="/editor-animator"
+            <Link to={teamContent.link2_url || "/editor-animator"}
               className="border-b-2 border-white pb-2 hover:opacity-90 transition-opacity font-['Vario']"
             >
-              Editor / Animator
+              {teamContent.link2_text || "Editor / Animator"}
             </Link>
           </div>
         </div>

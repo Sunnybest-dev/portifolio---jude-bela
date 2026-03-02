@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { supabase } from "../lib/supabase";
+import { useCMS } from "../lib/useCMS";
 import books2Img from "../../images/books 2.webp";
 import asset10Img from "../../images/Asset+10.webp";
 
 export default function NewsletterSection() {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState("");
+  const { content, loading } = useCMS("HomePage.NewsletterSection");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -25,11 +27,17 @@ export default function NewsletterSection() {
 
     setTimeout(() => setStatus(""), 3000);
   };
-  const links = [
+  const defaultLinks = [
     { label: "Vox Borders Series", href: "https://www.youtube.com/playlist?list=PLJ8cMiYb3G5dRe4rC7m8jDaqodjZeLzCZ" },
     { label: "The New York Times", href: "https://www.nytimes.com" },
     { label: "Jude's Channel", href: "https://www.youtube.com/channel/UCmGSJVG3mCRXVOP4yZrU1Dw" },
   ];
+
+  const links = content?.links || defaultLinks;
+
+  if (loading) {
+    return <div className="w-full h-64 bg-[#e7dfd2] animate-pulse"></div>;
+  }
 
   return (
     <div className="w-full overflow-hidden">
@@ -39,7 +47,7 @@ export default function NewsletterSection() {
           {/* Left: Books 2 Image */}
           <div className=" w-full max-w-[300px] lg:max-w-none lg:w-[380px] h-[420px] lg:h-[520px] order-2 lg:order-1 z-0 -mb-20">
             <img
-              src={books2Img}
+              src={content.books_image || books2Img}
               alt="Books"
               className="w-full h-full object-contain"
             />
@@ -48,7 +56,7 @@ export default function NewsletterSection() {
           {/* Arrow Image - Centered */}
           <div className="hidden lg:block absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-15 h-15 z-20">
             <img
-              src={asset10Img}
+              src={content.arrow_image || asset10Img}
               alt="Arrow"
               className="w-full h-full object-contain"
             />
@@ -57,9 +65,7 @@ export default function NewsletterSection() {
           {/* Right: Text */}
           <div className="max-w-xl text-black order-1 lg:order-2 font-['Caveat'] z-30 relative">
             <h2 className="text-xl font-semibold sm:text-2xl lg:text-5xl leading-relaxed italic -skew-x-6">
-              We have a monthly, non-spammy<br />
-              <span className="float-right">newsletter with our</span><br />
-              recommendations and a playlist.
+              {content.title || "We have a monthly, non-spammy newsletter with our recommendations and a playlist."}
             </h2>
           </div>
         </div>
@@ -70,8 +76,8 @@ export default function NewsletterSection() {
         <div className="max-w-5xl mx-auto px-6 flex flex-col sm:flex-row justify-center items-center gap-6 sm:gap-12 lg:gap-16 text-sm tracking-[0.2em] uppercase font-medium">
           {links.map((item) => (
             <a
-              key={item.label}
-              href={item.href}
+              key={item.label || item.url}
+              href={item.href || item.url}
               target="_blank"
               rel="noopener noreferrer"
               className="border-b-2 border-white/80 pb-2 hover:border-white transition-colors"

@@ -16,6 +16,7 @@ export default function AdminLayout({ children }) {
   const menuItems = [
     { name: 'Dashboard', path: '/admin/dashboard', icon: '📊' },
     { name: 'Site Settings', path: '/admin/settings', icon: '⚙️' },
+    { name: 'Content Editor', path: '/admin/content', icon: '📝' },
     { name: 'Page Sections', path: '/admin/sections', icon: '📄' },
     { name: 'Portfolio', path: '/admin/portfolio', icon: '🎬' },
     { name: 'FAQs', path: '/admin/faqs', icon: '❓' },

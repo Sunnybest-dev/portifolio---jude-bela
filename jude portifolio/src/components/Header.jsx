@@ -6,13 +6,30 @@ import logo from "../../images/JudeBella.png";
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [navItems, setNavItems] = useState([]);
+  const [siteSettings, setSiteSettings] = useState({});
 
   useEffect(() => {
     const fetchNav = async () => {
       const { data } = await supabase.from('navigation_items').select('*').eq('is_active', true).order('order_position');
       setNavItems(data || []);
     };
+    const fetchSettings = async () => {
+      const { data } = await supabase.from('site_settings').select('*');
+      const settingsMap = {};
+      data?.forEach(item => settingsMap[item.key] = item.value);
+      setSiteSettings(settingsMap);
+    };
+
     fetchNav();
+    fetchSettings();
+
+    // Realtime subscription for navigation updates
+    const channel = supabase.channel('header_updates')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'navigation_items' }, fetchNav)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'site_settings' }, fetchSettings)
+      .subscribe();
+
+    return () => { supabase.removeChannel(channel); };
   }, []);
 
   return (
@@ -22,10 +39,10 @@ export default function Header() {
 
         {/* Logo Section */}
         <Link to="/" className="flex items-center gap-3">
-          <img src={logo} alt="Jude Bela" className="h-10 lg:h-12" />
+          <img src={siteSettings.site_logo_url || logo} alt="Logo" className="h-10 lg:h-12" />
           <div>
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-light tracking-wide">
-              JUDE·BELA
+              {siteSettings.site_title || "JUDE·BELA"}
             </h1>
             <div className="h-[2px] lg:h-[3px] bg-red-600 w-full mt-2 lg:mt-3"></div>
           </div>

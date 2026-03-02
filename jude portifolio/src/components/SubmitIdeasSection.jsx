@@ -1,7 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useCMS } from "../lib/useCMS";
 
 export default function SubmitIdeasSection() {
+  const { content, loading } = useCMS("HomePage.SubmitIdeasSection");
+
+  if (loading) return <div className="w-full h-96 bg-black animate-pulse"></div>;
+
   return (
     <div className="relative w-full py-20 bg-black text-white flex font-['DM_Sans'] items-center justify-center overflow-hidden">
 
@@ -44,19 +49,17 @@ export default function SubmitIdeasSection() {
 
         {/* Heading */}
         <h1 className="text-5xl md:text-6xl font-light mb-10 tracking-wide font-['Vario']">
-          Have an idea for a story?
+          {content.title || "Have an idea for a story?"}
         </h1>
 
         {/* Paragraph */}
-        <p className="text-lg md:text-xl leading-9 font-light mb-12 font-['Vario']">
-          We're eager to hear about the stories you would like to see covered.<br />
-          Please include your story submissions using the form below and we<br />
-          will reach out if it seems like a good fit.
+        <p className="text-lg md:text-xl leading-9 font-light mb-12 font-['Vario'] whitespace-pre-line">
+          {content.description || "We're eager to hear about the stories you would like to see covered.\nPlease include your story submissions using the form below and we\nwill reach out if it seems like a good fit."}
         </p>
 
         {/* Button */}
-        <Link to="/submit-ideas" className="relative uppercase tracking-widest text-sm font-semibold group inline-block">
-          SUBMIT IDEAS
+        <Link to={content.button_url || "/submit-ideas"} className="relative uppercase tracking-widest text-sm font-semibold group inline-block">
+          {content.button_text || "SUBMIT IDEAS"}
           <span className="block h-[2px] bg-orange-600 w-full mt-2"></span>
         </Link>
 

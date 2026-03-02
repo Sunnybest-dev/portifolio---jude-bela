@@ -5,9 +5,8 @@ import AdminLayout from '../components/AdminLayout';
 
 export default function AdminNavigation() {
   const navigate = useNavigate();
-  const [items, setItems] = useState([]);
-  const [showForm, setShowForm] = useState(false);
-  const [formData, setFormData] = useState({ label: '', url: '', order_position: 1, is_active: true });
+  const [links, setLinks] = useState([]);
+  const [formData, setFormData] = useState({ label: '', url: '', order_position: 0 });
   const [editId, setEditId] = useState(null);
 
   useEffect(() => {
@@ -16,86 +15,68 @@ export default function AdminNavigation() {
       if (!session) navigate('/admin/login');
     };
     checkAuth();
-    fetchItems();
+    fetchLinks();
   }, [navigate]);
 
-  const fetchItems = async () => {
-    const { data } = await supabase.from('navigation_items').select('*').order('order_position');
-    setItems(data || []);
+  const fetchLinks = async () => {
+    const { data } = await supabase.from('navigation_links').select('*').order('order_position');
+    setLinks(data || []);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (editId) {
-      await supabase.from('navigation_items').update(formData).eq('id', editId);
+      await supabase.from('navigation_links').update(formData).eq('id', editId);
     } else {
-      await supabase.from('navigation_items').insert([formData]);
+      await supabase.from('navigation_links').insert([formData]);
     }
-    setShowForm(false);
+    setFormData({ label: '', url: '', order_position: 0 });
     setEditId(null);
-    setFormData({ label: '', url: '', order_position: 1, is_active: true });
-    fetchItems();
-  };
-
-  const handleEdit = (item) => {
-    setFormData(item);
-    setEditId(item.id);
-    setShowForm(true);
+    fetchLinks();
   };
 
   const handleDelete = async (id) => {
-    if (confirm('Delete this item?')) {
-      await supabase.from('navigation_items').delete().eq('id', id);
-      fetchItems();
+    if (confirm('Delete this link?')) {
+      await supabase.from('navigation_links').delete().eq('id', id);
+      fetchLinks();
     }
   };
 
   return (
     <AdminLayout>
       <div className="max-w-4xl mx-auto">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold text-gray-900 font-['Poppins']">Navigation Management</h1>
-          <button onClick={() => setShowForm(!showForm)} className="bg-[#e05532] text-white px-6 py-2 rounded-lg hover:bg-[#c44b2b] font-['Poppins'] font-medium">
-            {showForm ? 'Cancel' : 'Add New'}
+        <h1 className="text-3xl font-bold mb-6 font-['Poppins']">Navigation Links</h1>
+        
+        <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md mb-8 border border-gray-200 flex gap-4 items-end flex-wrap">
+          <div className="flex-1 min-w-[200px]">
+            <label className="block text-xs font-bold mb-1 uppercase text-gray-500">Label</label>
+            <input type="text" value={formData.label} onChange={e => setFormData({...formData, label: e.target.value})} className="w-full border p-2 rounded" required />
+          </div>
+          <div className="flex-1 min-w-[200px]">
+            <label className="block text-xs font-bold mb-1 uppercase text-gray-500">URL</label>
+            <input type="text" value={formData.url} onChange={e => setFormData({...formData, url: e.target.value})} className="w-full border p-2 rounded" required />
+          </div>
+          <div className="w-20">
+            <label className="block text-xs font-bold mb-1 uppercase text-gray-500">Order</label>
+            <input type="number" value={formData.order_position} onChange={e => setFormData({...formData, order_position: parseInt(e.target.value)})} className="w-full border p-2 rounded" />
+          </div>
+          <button type="submit" className="bg-[#e05532] text-white px-6 py-2 rounded hover:bg-[#c44b2b] font-['Poppins'] h-[42px]">
+            {editId ? 'Update' : 'Add'}
           </button>
-        </div>
+          {editId && <button type="button" onClick={() => { setEditId(null); setFormData({ label: '', url: '', order_position: 0 }); }} className="bg-gray-500 text-white px-4 py-2 rounded h-[42px]">Cancel</button>}
+        </form>
 
-        {showForm && (
-          <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-lg border-2 border-gray-200 p-6 mb-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-semibold mb-2 font-['Poppins']">Label *</label>
-                <input type="text" value={formData.label} onChange={(e) => setFormData({...formData, label: e.target.value})} className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#e05532]" required />
+        <div className="bg-white rounded-lg shadow border border-gray-200 overflow-hidden">
+          {links.map(link => (
+            <div key={link.id} className="p-4 border-b last:border-0 flex justify-between items-center hover:bg-gray-50">
+              <div className="flex items-center gap-4">
+                <span className="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs font-bold">#{link.order_position}</span>
+                <span className="font-bold font-['Poppins']">{link.label}</span>
+                <span className="text-gray-500 text-sm font-mono">{link.url}</span>
               </div>
-              <div>
-                <label className="block text-sm font-semibold mb-2 font-['Poppins']">URL *</label>
-                <input type="text" value={formData.url} onChange={(e) => setFormData({...formData, url: e.target.value})} className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#e05532]" required />
-              </div>
-              <div>
-                <label className="block text-sm font-semibold mb-2 font-['Poppins']">Order</label>
-                <input type="number" value={formData.order_position} onChange={(e) => setFormData({...formData, order_position: parseInt(e.target.value)})} className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#e05532]" />
-              </div>
-              <div className="flex items-center">
-                <input type="checkbox" checked={formData.is_active} onChange={(e) => setFormData({...formData, is_active: e.target.checked})} className="mr-2" />
-                <label className="text-sm font-semibold font-['Poppins']">Active</label>
-              </div>
-            </div>
-            <button type="submit" style={{backgroundColor: '#e05532'}} className="mt-4 text-white px-8 py-3 rounded-lg hover:opacity-90 font-['Poppins'] font-semibold shadow-lg">
-              {editId ? 'Save Changes' : 'Save'}
-            </button>
-          </form>
-        )}
-
-        <div className="space-y-4">
-          {items.map((item) => (
-            <div key={item.id} className="bg-white rounded-lg shadow-md p-4 flex justify-between items-center">
-              <div>
-                <h3 className="font-bold font-['Poppins']">{item.label}</h3>
-                <p className="text-sm text-gray-600 font-['Poppins']">{item.url} - Order: {item.order_position}</p>
-              </div>
-              <div className="flex gap-2">
-                <button onClick={() => handleEdit(item)} className="text-[#e05532] hover:underline font-['Poppins']">Edit</button>
-                <button onClick={() => handleDelete(item.id)} className="text-red-600 hover:underline font-['Poppins']">Delete</button>
+              <div className="flex gap-3">
+                <button onClick={() => { setFormData(link); setEditId(link.id); }} className="text-blue-600 hover:underline text-sm">Edit</button>
+                <button onClick={() => handleDelete(link.id)} className="text-red-600 hover:underline text-sm">Delete</button>
               </div>
             </div>
           ))}

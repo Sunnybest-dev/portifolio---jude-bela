@@ -1,10 +1,16 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import manImg from "../../images/man.webp";
+import { useCMS } from "../lib/useCMS";
 import blackImg from "../../images/black.webp";
 import bracketImg from "../../images/bracket.webp";
 
 export default function Hero() {
+  const { content, loading } = useCMS("HomePage.HeroSection");
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="relative w-full py-6 bg-[#e9e4da] text-black overflow-hidden">
 
@@ -16,11 +22,11 @@ export default function Hero() {
         {/* LEFT TEXT CONTENT */}
         <div className="max-w-xl">
           <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light leading-tight mb-6 lg:mb-10">
-            Journalist based in <br /> Washington DC.
+            {content.title}
           </h2>
 
-          <Link to="/about" className="uppercase tracking-widest text-sm font-medium group inline-block">
-            MORE ABOUT JUDE
+          <Link to={content.link_url} className="uppercase tracking-widest text-sm font-medium group inline-block">
+            {content.link_text}
             <span className="block h-[2px] bg-red-600 w-full mt-3"></span>
           </Link>
         </div>
@@ -30,21 +36,21 @@ export default function Hero() {
 
           {/* Black Paper Background */}
           <img
-            src={blackImg}
+            src={content.black_image || blackImg}
             alt=""
             className="absolute -top-8 w-[350px] h-[420px] object-cover"
           />
 
           {/* Main Image */}
           <img
-            src={manImg}
+            src={content.background_image}
             alt="Journalist"
             className="relative -left-30 ml-8 w-[350px] h-[420px] object-cover"
           />
 
           {/* Corner Brackets */}
           <img
-            src={bracketImg}
+            src={content.bracket_image || bracketImg}
             alt=""
             className="absolute left-70 top-30 -translate-y-1/2 w-20 h-20 object-contain"
           />

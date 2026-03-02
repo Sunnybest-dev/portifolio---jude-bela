@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { supabase } from '../lib/supabase';
+import { useCMS } from "../lib/useCMS";
 import floatingIcon from "../../images/Asset+53.webp";
 import floatingIcon2 from "../../images/Asset+38.webp";
 import rightIcon1 from "../../images/Icon+103.webp";
@@ -14,6 +15,7 @@ import leftIcon3 from "../../images/shape.webp";
 export default function FAQs() {
   const [openIndex, setOpenIndex] = useState(null);
   const [faqs, setFaqs] = useState([]);
+  const { content } = useCMS("FAQsPage.Content");
 
   useEffect(() => {
     const fetchFaqs = async () => {
@@ -44,7 +46,7 @@ export default function FAQs() {
           
           <div className="max-w-6xl mx-auto px-6 py-20 text-center relative">
             <h1 className="relative text-5xl tracking-wide">
-              Frequently Asked Questions
+              {content?.title || "Frequently Asked Questions"}
             </h1>
           </div>
         </section>
@@ -98,8 +100,8 @@ export default function FAQs() {
           {/* Contact Button */}
           <div className="flex justify-center pt-6 text-white font-semibold ">
             <a
-              href="/contact" className="bg-[#1f1f1f] px-80 py-3 tracking-widest text-sm">
-              CONTACT PAGE
+              href={content?.contact_button_url || "/contact"} className="bg-[#1f1f1f] px-80 py-3 tracking-widest text-sm uppercase">
+              {content?.contact_button_text || "CONTACT PAGE"}
             </a>
           </div>
 

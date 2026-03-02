@@ -2,11 +2,13 @@ import React, { useState, useEffect } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { supabase } from '../lib/supabase';
+import { useCMS } from "../lib/useCMS";
 import mapBg from "../../images/map.jpg";
 
 export default function Contact() {
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
   const [emails, setEmails] = useState({ business: '', journalism: '' });
+  const { content, loading } = useCMS("ContactPage.Content");
 
   useEffect(() => {
     const fetchEmails = async () => {
@@ -35,7 +37,7 @@ export default function Contact() {
       <Header />
       <div
         className="w-full min-h-screen pt-20 flex items-center justify-center bg-center bg-cover bg-no-repeat relative"
-        style={{ backgroundImage: `url(${mapBg})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
+        style={{ backgroundImage: `url(${content?.background_image || mapBg})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
       >
         {/* Black backdrop overlay */}
         <div className="absolute inset-0 bg-black opacity-50"></div>
@@ -44,7 +46,7 @@ export default function Contact() {
           {/* Header */}
           <div className="bg-[#1e1e1e] py-5">
             <h1 className="text-white text-center text-2xl tracking-[4px] font-semibold">
-              CONTACT
+              {content?.title || "CONTACT"}
             </h1>
           </div>
 
@@ -52,9 +54,8 @@ export default function Contact() {
           <div className="bg-[#e9e9e9] px-16 py-14">
             {/* Business Section */}
             <div className="mb-12">
-              <h2 className="text-[26px] font-serif text-gray-800 leading-relaxed">
-                For business and partnership inquiries on <br />
-                Jude's Youtube Channel:
+              <h2 className="text-[26px] font-serif text-gray-800 leading-relaxed whitespace-pre-line">
+                {content?.business_title || "For business and partnership inquiries on \nJude's Youtube Channel:"}
               </h2>
 
               <div className="w-full h-[2px] bg-[#c44b2b] mt-4 mb-6"></div>
@@ -66,8 +67,8 @@ export default function Contact() {
 
             {/* Hosting Section */}
             <div className="mb-12">
-              <h2 className="text-[26px] font-serif text-gray-800 leading-relaxed">
-                For hosting or journalism work:
+              <h2 className="text-[26px] font-serif text-gray-800 leading-relaxed whitespace-pre-line">
+                {content?.journalism_title || "For hosting or journalism work:"}
               </h2>
 
               <div className="w-full h-[2px] bg-[#c44b2b] mt-4 mb-6"></div>
@@ -79,7 +80,7 @@ export default function Contact() {
 
             {/* Contact Form */}
             <div>
-              <h2 className="text-[26px] font-serif text-gray-800 mb-4">Send a Message:</h2>
+              <h2 className="text-[26px] font-serif text-gray-800 mb-4">{content?.form_title || "Send a Message:"}</h2>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <input
                   type="text"
